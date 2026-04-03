@@ -39,6 +39,7 @@ function request(method, path, body, extraHeaders = {}) {
 
 // ── Test runner ───────────────────────────────────────────────────
 let passed = 0; let failed = 0
+let adminToken = ''
 
 async function test(name, fn) {
   try {
@@ -61,6 +62,13 @@ async function testHealth() {
     assert.strictEqual(status, 200)
     assert.strictEqual(body.status, 'ok')
   })
+
+  // Login to get admin token for protected route tests
+  const adminPassword = process.env.ADMIN_PASSWORD || 'agroconnect_admin_2026'
+  const loginRes = await request('POST', '/admin/login', { password: adminPassword })
+  if (loginRes.status === 200 && loginRes.body.token) {
+    adminToken = loginRes.body.token
+  }
 }
 
 async function testProduce() {
@@ -125,7 +133,7 @@ async function testProduce() {
 
   if (createdId) {
     await test('DELETE /produce/:id soft-deletes listing', async () => {
-      const { status, body } = await request('DELETE', `/produce/${createdId}`)
+      const { status, body } = await request('DELETE', `/produce/${createdId}`, null, { Authorization: `Bearer ${adminToken}` })
       assert.strictEqual(status, 200)
       assert.strictEqual(body.success, true)
     })
@@ -137,7 +145,7 @@ async function testProduce() {
     })
 
     await test('PATCH /produce/:id/approve re-activates listing', async () => {
-      const { status, body } = await request('PATCH', `/produce/${createdId}/approve`)
+      const { status, body } = await request('PATCH', `/produce/${createdId}/approve`, null, { Authorization: `Bearer ${adminToken}` })
       assert.strictEqual(status, 200)
       assert.strictEqual(body.success, true)
     })
