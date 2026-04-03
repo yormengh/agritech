@@ -22,11 +22,11 @@ terraform {
 
   # Remote state in S3 with DynamoDB locking
   backend "s3" {
-    bucket         = "agroconnect-terraform-state-prod"
-    key            = "production/terraform.tfstate"
-    region         = "us-east-2"
-    encrypt        = true
-    dynamodb_table = "agroconnect-terraform-locks"
+    bucket       = "agroconnect-terraform-state-prod"
+    key          = "production/terraform.tfstate"
+    region       = "us-east-2"
+    encrypt      = true
+    use_lockfile = true
   }
 }
 

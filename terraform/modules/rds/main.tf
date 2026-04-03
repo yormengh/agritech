@@ -66,10 +66,6 @@ resource "aws_db_parameter_group" "postgres" {
     name  = "log_min_duration_statement"
     value = "1000"
   }
-  parameter {
-    name  = "ssl"
-    value = "1"
-  }
 
   tags = var.tags
 }

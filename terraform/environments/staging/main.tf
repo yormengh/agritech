@@ -158,5 +158,6 @@ resource "helm_release" "argocd" {
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
   version          = "5.51.4"
+  timeout          = 600
   depends_on       = [module.eks]
 }
