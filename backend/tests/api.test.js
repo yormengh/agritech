@@ -202,6 +202,7 @@ async function run() {
     process.exit(1)
   } else {
     console.log('\n✅ All tests passed!\n')
+    process.exit(0)
   }
 }
 
@@ -212,12 +213,12 @@ if (require.main === module) {
       process.env.DATABASE_URL = process.env.TEST_DATABASE_URL
     }
     // Import and start server, then test
-    const server = require('../server')
+    require('../server')
     // server.js uses app.listen internally; give it 1s to boot
-    setTimeout(() => run().catch(console.error), 1000)
+    setTimeout(() => run().then(() => process.exit(0)).catch(() => process.exit(1)), 1000)
   } else {
     console.warn('⚠️  No DATABASE_URL set — running against existing server at', BASE)
-    run().catch(console.error)
+    run().then(() => process.exit(0)).catch(() => process.exit(1))
   }
 }
 
