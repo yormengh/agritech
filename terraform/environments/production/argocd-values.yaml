@@ -1,0 +1,59 @@
+global:
+  image:
+    tag: v2.9.3
+
+configs:
+  params:
+    server.insecure: false
+  cm:
+    url: https://argocd.agroconnect.gh
+    resource.customizations.health.argoproj.io_Application: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs
+  rbac:
+    policy.default: role:readonly
+    policy.csv: |
+      p, role:admin, applications, *, */*, allow
+      p, role:admin, clusters, get, *, allow
+      p, role:admin, repositories, *, *, allow
+      g, platform-team, role:admin
+
+server:
+  replicas: 2
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits:   { cpu: 500m, memory: 512Mi }
+  service:
+    type: ClusterIP
+
+repoServer:
+  replicas: 2
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits:   { cpu: 500m, memory: 1Gi }
+
+applicationSet:
+  replicas: 2
+
+redis:
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits:   { cpu: 200m, memory: 256Mi }
+
+notifications:
+  enabled: true
+  secret:
+    create: false
+
+dex:
+  enabled: false

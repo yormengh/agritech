@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: agroconnect
+
+bases:
+  - ../../base/frontend
+  - ../../base/backend
+  - ../../base/postgres
+
+resources:
+  - ../../base/ingress-network.yaml
+  - ../../base/karpenter-nodepool.yaml
+  - namespace.yaml
+
+images:
+  - name: FRONTEND_IMAGE
+    newName: 794038236323.dkr.ecr.us-east-2.amazonaws.com/agroconnect-prod/frontend
+    newTag: latest   # overridden by CI with sha tag
+  - name: BACKEND_IMAGE
+    newName: 794038236323.dkr.ecr.us-east-2.amazonaws.com/agroconnect-prod/backend
+    newTag: latest
+
+patches:
+  - path: patches/backend-replicas.yaml
+  - path: patches/frontend-replicas.yaml
+  - path: patches/resource-limits.yaml
+
+commonLabels:
+  environment: production
+  managed-by: argocd
+
+commonAnnotations:
+  deployment.kubernetes.io/revision: "1"

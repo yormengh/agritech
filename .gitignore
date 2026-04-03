@@ -1,0 +1,67 @@
+# ── Node / JavaScript ─────────────────────────────────────────────
+node_modules/
+dist/
+build/
+.npm/
+*.tsbuildinfo
+
+# ── Environment files (NEVER commit plain secrets) ────────────────
+.env
+.env.local
+.env.*.local
+backend/.env
+!.env.example
+!backend/.env.example
+
+# ── Terraform ─────────────────────────────────────────────────────
+**/.terraform/
+**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+tfplan
+*.tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# ── Kubernetes / Helm ─────────────────────────────────────────────
+kubeconfig
+*.kubeconfig
+helm-charts/charts/
+*.tgz
+
+# ── Docker ────────────────────────────────────────────────────────
+.dockerignore
+
+# ── Security scan outputs ─────────────────────────────────────────
+*.sarif
+trivy-*.json
+semgrep-*.json
+snyk-*.json
+gitleaks-report.*
+checkov-*.json
+
+# ── IDE / OS ──────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Test coverage ─────────────────────────────────────────────────
+coverage/
+.nyc_output/
+lcov.info
+junit*.xml
+
+# ── Misc ──────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+.cache/

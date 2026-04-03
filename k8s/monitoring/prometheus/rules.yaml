@@ -1,0 +1,158 @@
+---
+# PrometheusRule CRD — picked up automatically by kube-prometheus-stack
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: agroconnect-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack   # must match Prometheus selector
+spec:
+  groups:
+
+    # ── Application Availability ──────────────────────────────────
+    - name: agroconnect.availability
+      interval: 30s
+      rules:
+
+        - alert: BackendDown
+          expr: up{job="agroconnect-backend"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "AgroConnect backend is DOWN"
+            description: "Backend pod {{ $labels.pod }} has been unreachable for > 1 minute."
+            runbook: "https://github.com/YOUR_ORG/agroconnect/blob/main/docs/runbook.md#backend-down"
+
+        - alert: BackendHighErrorRate
+          expr: |
+            sum(rate(http_requests_total{namespace="agroconnect",status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total{namespace="agroconnect"}[5m])) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "High HTTP 5xx error rate ({{ $value | humanizePercentage }})"
+            description: "Error rate has exceeded 5% for the past 5 minutes."
+
+        - alert: BackendHighLatency
+          expr: |
+            histogram_quantile(0.99,
+              sum(rate(http_request_duration_ms_bucket{namespace="agroconnect"}[5m])) by (le)
+            ) > 2000
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "P99 latency is {{ $value }}ms (threshold: 2000ms)"
+            description: "Backend p99 response time exceeds 2 seconds."
+
+        - alert: FrontendDown
+          expr: kube_deployment_status_replicas_available{namespace="agroconnect",deployment="frontend"} == 0
+          for: 2m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Frontend deployment has 0 available replicas"
+
+    # ── Kubernetes Resources ──────────────────────────────────────
+    - name: agroconnect.kubernetes
+      interval: 60s
+      rules:
+
+        - alert: PodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total{namespace="agroconnect"}[15m]) * 60 * 15 > 3
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pod {{ $labels.pod }} is crash-looping ({{ $value }} restarts/15m)"
+
+        - alert: PodNotReady
+          expr: |
+            kube_pod_status_ready{namespace="agroconnect",condition="true"} == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} has been Not Ready for > 5 minutes"
+
+        - alert: DeploymentReplicasMismatch
+          expr: |
+            kube_deployment_spec_replicas{namespace="agroconnect"}
+            != kube_deployment_status_replicas_available{namespace="agroconnect"}
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Deployment {{ $labels.deployment }} replicas mismatch for > 10 minutes"
+
+        - alert: HighCPUUsage
+          expr: |
+            sum(rate(container_cpu_usage_seconds_total{namespace="agroconnect",container!=""}[5m])) by (pod)
+            /
+            sum(kube_pod_container_resource_limits{namespace="agroconnect",resource="cpu"}) by (pod) > 0.9
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} CPU usage > 90% of limit"
+
+        - alert: HighMemoryUsage
+          expr: |
+            sum(container_memory_working_set_bytes{namespace="agroconnect",container!=""}) by (pod)
+            /
+            sum(kube_pod_container_resource_limits{namespace="agroconnect",resource="memory"}) by (pod) > 0.85
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} memory > 85% of limit"
+
+    # ── Database ──────────────────────────────────────────────────
+    - name: agroconnect.database
+      interval: 60s
+      rules:
+
+        - alert: RDSHighConnections
+          expr: aws_rds_database_connections_average > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "RDS connection count is high ({{ $value }})"
+
+        - alert: RDSHighCPU
+          expr: aws_rds_cpuutilization_average > 80
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "RDS CPU utilisation at {{ $value }}%"
+
+    # ── Karpenter Node Scaling ────────────────────────────────────
+    - name: agroconnect.karpenter
+      interval: 60s
+      rules:
+
+        - alert: KarpenterNodeProvisioningFailed
+          expr: increase(karpenter_nodes_total{reason="launch_failure"}[15m]) > 2
+          for: 0m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Karpenter failed to provision {{ $value }} nodes in the last 15 minutes"
+
+        - alert: NodeNotReady
+          expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Node {{ $labels.node }} has been NotReady for > 5 minutes"

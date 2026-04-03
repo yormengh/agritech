@@ -1,0 +1,222 @@
+.form-page {
+  padding-top: 100px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+}
+
+/* Layout */
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 560px;
+  gap: 64px;
+  align-items: start;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Left panel */
+.form-panel__left {
+  position: sticky;
+  top: 100px;
+  padding-top: 16px;
+  padding-bottom: 40px;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  color: var(--earth-deep);
+  line-height: 1.1;
+  margin-bottom: 18px;
+  margin-top: 8px;
+}
+
+.panel-desc {
+  color: #7a6650;
+  font-size: 0.95rem;
+  line-height: 1.78;
+  max-width: 360px;
+  margin-bottom: 32px;
+}
+
+/* Benefits */
+.form-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-bottom: 36px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--earth-brown);
+}
+
+.benefit-icon {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; color: white;
+}
+
+/* Adinkra symbol decoration */
+.panel-adinkra {
+  margin-top: 24px;
+}
+
+.adinkra-caption {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+
+/* Request ticker */
+.request-ticker {
+  background: var(--cream);
+  border: 1px solid #e0d4c0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--earth-brown);
+  padding: 8px 14px;
+  border-bottom: 1px solid #ede4d4;
+}
+.ticker-item:last-child { border-bottom: none; }
+
+.ticker-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--forest-light);
+  flex-shrink: 0;
+}
+
+/* Right panel */
+.form-panel__right { padding-top: 16px; }
+
+.form-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(26,18,8,0.1);
+  border: 1px solid #e8dece;
+}
+
+.form-card__body { padding: 36px 36px 40px; }
+
+.produce-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Spinner */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast error */
+.toast--error {
+  background: var(--terracotta);
+  border-left-color: #ff8080;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .form-layout { grid-template-columns: 1fr; gap: 40px; }
+  .form-panel__left { position: static; padding-bottom: 0; }
+}
+
+@media (max-width: 560px) {
+  .form-card__body { padding: 24px 20px 28px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-page { padding-top: 80px; }
+}
+
+/* Multi-produce rows */
+.form-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted, #5a4a3a);
+  margin-bottom: 0.75rem;
+}
+
+.produce-row {
+  border: 1px solid rgba(201,162,39,0.25);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: rgba(201,162,39,0.03);
+}
+
+.produce-row__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.produce-row__num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--amber, #c9a227);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.remove-row-btn {
+  background: none;
+  border: none;
+  color: var(--terracotta, #c1440e);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.remove-row-btn:hover { background: rgba(193,68,14,0.08); }
+
+.add-row-btn {
+  width: 100%;
+  padding: 0.65rem;
+  border: 2px dashed rgba(201,162,39,0.4);
+  border-radius: 8px;
+  background: none;
+  color: var(--amber, #c9a227);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+}
+.add-row-btn:hover { border-color: var(--amber, #c9a227); background: rgba(201,162,39,0.05); }

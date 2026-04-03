@@ -1,0 +1,62 @@
+.produce-card {
+  background: white; border: 1.5px solid #e8dece;
+  border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+}
+.produce-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 44px rgba(201,162,39,0.15), 0 4px 16px rgba(26,18,8,0.08);
+  border-color: var(--gold);
+}
+
+/* Adinkra watermark */
+.produce-card__adinkra-watermark {
+  position: absolute; top: 36px; right: 12px;
+  font-size: 3rem; color: var(--gold); opacity: 0.06;
+  user-select: none; pointer-events: none; line-height: 1;
+  transition: opacity 0.2s;
+}
+.produce-card:hover .produce-card__adinkra-watermark { opacity: 0.12; }
+
+.produce-card__header {
+  padding: 16px 16px 0; display: flex; align-items: flex-start; justify-content: space-between;
+}
+.produce-icon { font-size: 2.6rem; line-height: 1; }
+.produce-card__badge {
+  background: var(--cream); color: var(--earth-brown); font-size: 0.7rem;
+  font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 20px; border: 1px solid var(--cream-mid);
+}
+
+.produce-card__body { padding: 10px 16px 14px; flex: 1; }
+.produce-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--earth-deep); margin-bottom: 8px; }
+.produce-meta { display: flex; flex-direction: column; gap: 5px; }
+.meta-item { display: flex; align-items: center; gap: 5px; font-size: 0.82rem; color: #7a6650; }
+.meta-price { color: var(--forest-light); font-weight: 700; font-size: 0.95rem; }
+
+.produce-card__footer {
+  padding: 12px 14px; border-top: 1px solid #f0e8d8;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: #fdf9f4;
+}
+.farmer-info { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.farmer-avatar {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--forest);
+  color: var(--gold-light); font-size: 0.68rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.farmer-name { font-size: 0.78rem; font-weight: 600; color: var(--earth-brown); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
+
+/* Action buttons */
+.card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.card-action-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+  text-transform: uppercase; padding: 7px 10px; border-radius: 4px;
+  text-decoration: none; white-space: nowrap; transition: all 0.18s; border: none; cursor: pointer;
+}
+.card-action-call { background: var(--forest); color: var(--gold-light); }
+.card-action-call:hover { background: var(--forest-light); }
+.card-action-wa { background: #25d366; color: white; }
+.card-action-wa:hover { background: #1ebe5d; }

@@ -1,0 +1,150 @@
+name: Security — Scheduled Audit
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"   # Every Monday 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+env:
+  AWS_REGION: us-east-2
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com
+  CLUSTER_NAME: agroconnect-prod
+
+jobs:
+  # ── Full dependency audit ────────────────────────────────────────
+  dependency-review:
+    name: Full Dependency Review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Frontend audit
+        run: npm audit --json > frontend-audit.json || true
+
+      - name: Backend audit
+        working-directory: backend
+        run: npm audit --json > backend-audit.json || true
+
+      - name: Snyk monitor — frontend
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --file=package.json --project-name=agroconnect-frontend
+
+      - name: Snyk monitor — backend
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --file=backend/package.json --project-name=agroconnect-backend
+
+  # ── ECR image re-scan ────────────────────────────────────────────
+  image-rescan:
+    name: Re-scan Production Images
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: [frontend, backend]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Trivy full scan — ${{ matrix.image }}
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.ECR_REGISTRY }}/${{ env.CLUSTER_NAME }}/${{ matrix.image }}:latest
+          format: sarif
+          output: trivy-${{ matrix.image }}.sarif
+          severity: CRITICAL,HIGH,MEDIUM
+          exit-code: "0"
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-${{ matrix.image }}.sarif
+
+  # ── CIS K8s benchmark ────────────────────────────────────────────
+  k8s-cis-benchmark:
+    name: K8s CIS Benchmark (kube-bench)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Run kube-bench
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
+          kubectl wait --for=condition=complete job/kube-bench --timeout=300s
+          kubectl logs job/kube-bench > kube-bench-results.txt
+          cat kube-bench-results.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: kube-bench-results
+          path: kube-bench-results.txt
+          retention-days: 30
+
+  # ── Terraform drift detection ────────────────────────────────────
+  drift-detection:
+    name: Terraform Drift Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.6"
+
+      - name: Check for drift
+        working-directory: terraform/environments/production
+        run: |
+          terraform init -input=false
+          terraform plan \
+            -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -var="github_org=${{ secrets.GITHUB_ORG }}" \
+            -var="github_repo=${{ secrets.GITHUB_REPO }}" \
+            -detailed-exitcode \
+            -input=false 2>&1 | tee drift.txt
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ $EXIT_CODE -eq 2 ]; then
+            echo "DRIFT DETECTED — infrastructure has changed outside of Terraform"
+            cat drift.txt
+            exit 1
+          fi

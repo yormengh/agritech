@@ -1,0 +1,105 @@
+.find-page {
+  padding-top: 100px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+}
+
+.find-header { margin-bottom: 36px; }
+.find-subtitle { color: #7a6650; margin-top: 8px; font-size: 1rem; }
+
+/* Toolbar */
+.find-toolbar {
+  display: flex; gap: 12px; margin-bottom: 18px;
+  align-items: center; flex-wrap: wrap;
+}
+.search-wrap { flex: 1; min-width: 240px; position: relative; display: flex; align-items: center; }
+.search-icon { position: absolute; left: 14px; color: #9a8870; pointer-events: none; }
+.search-input {
+  width: 100%; padding: 12px 40px 12px 44px;
+  background: white; border: 1.5px solid #ddd5c4; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 0.95rem; color: var(--earth-deep);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.14);
+}
+.search-clear {
+  position: absolute; right: 12px; background: none; border: none;
+  cursor: pointer; font-size: 0.85rem; color: #9a8870;
+  padding: 2px 6px; border-radius: 4px; transition: background 0.15s;
+}
+.search-clear:hover { background: #f0e8d8; }
+
+.filter-select {
+  width: auto; min-width: 180px;
+}
+
+.refresh-btn {
+  width: 44px; height: 44px; border-radius: var(--radius);
+  border: 1.5px solid #ddd5c4; background: white; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--earth-brown); transition: all 0.2s; flex-shrink: 0;
+}
+.refresh-btn:hover { border-color: var(--gold); color: var(--amber); background: #fdf9f0; }
+
+/* Demo notice */
+.demo-notice {
+  background: #fff8e7; border: 1px solid rgba(212,131,10,0.28);
+  border-radius: var(--radius); padding: 10px 16px;
+  font-size: 0.82rem; color: var(--amber); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 7px;
+}
+.demo-notice code { background: rgba(212,131,10,0.1); padding: 1px 6px; border-radius: 3px; font-size: 0.78rem; }
+
+/* Results meta */
+.results-meta { font-size: 0.84rem; color: #9a8870; margin-bottom: 24px; }
+.results-meta strong { color: var(--earth-deep); font-weight: 700; }
+.results-meta em { font-style: normal; color: var(--forest-light); font-weight: 600; }
+
+/* Grid */
+.produce-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
+.produce-grid > div { opacity: 0; }
+
+/* Skeleton loading */
+.loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
+.skeleton-card {
+  height: 240px; border-radius: 10px; overflow: hidden;
+  background: linear-gradient(90deg, #f0e8d8 25%, #fdf6ec 50%, #f0e8d8 75%);
+  background-size: 200% 100%; animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 80px 20px; color: #9a8870; }
+.empty-icon { font-size: 4rem; margin-bottom: 16px; }
+.empty-state h3 { font-family: var(--font-display); font-size: 1.4rem; color: var(--earth-brown); margin-bottom: 8px; }
+.empty-state p { font-size: 0.9rem; }
+
+/* Pagination */
+.pagination {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-top: 48px; flex-wrap: wrap;
+}
+.page-btn {
+  background: white; border: 1.5px solid #ddd5c4; color: var(--earth-brown);
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+  padding: 9px 18px; border-radius: var(--radius); cursor: pointer;
+  transition: all 0.18s;
+}
+.page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--amber); }
+.page-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.page-numbers { display: flex; gap: 6px; }
+.page-num {
+  width: 36px; height: 36px; border-radius: var(--radius);
+  border: 1.5px solid #ddd5c4; background: white;
+  color: var(--earth-brown); font-family: var(--font-body);
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.page-num:hover { border-color: var(--gold); color: var(--amber); }
+.page-num--active {
+  background: var(--forest); border-color: var(--forest);
+  color: var(--gold-light);
+}

@@ -1,0 +1,198 @@
+.admin-page { min-height: 100vh; padding: 6rem 0 4rem; background: var(--cream, #fdf6ec); }
+
+.admin-header {
+  margin-bottom: 2rem;
+  position: relative;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--earth-deep, #1a1a0e);
+  background-image: url('../assets/coat-of-arms.png');
+  background-repeat: no-repeat;
+  background-position: center right 2rem;
+  background-size: 200px;
+}
+.admin-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 26, 14, 0.75);
+}
+.admin-header > * { position: relative; z-index: 1; }
+.admin-header .section-eyebrow { color: var(--amber, #c9a227); }
+.admin-header .section-title { color: white; margin-bottom: 0.25rem; }
+.admin-subtitle { color: rgba(255,255,255,0.65); margin-top: 0.25rem; }
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.admin-stat {
+  background: white;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid var(--amber, #c9a227);
+}
+.admin-stat__value { display: block; font-size: 2rem; font-weight: 800; color: var(--earth-deep, #1a1a0e); }
+.admin-stat__label { font-size: 0.8rem; color: var(--text-muted, #5a4a3a); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+.admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 0; }
+.admin-tab {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  background: white;
+  border-radius: 8px 8px 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted, #5a4a3a);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.admin-tab--active { background: var(--earth-deep, #1a1a0e); color: var(--amber, #c9a227); }
+
+.admin-table-wrap {
+  background: white;
+  border-radius: 0 8px 8px 8px;
+  overflow-x: auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  margin-top: 0;
+}
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.admin-table th {
+  background: var(--earth-deep, #1a1a0e);
+  color: rgba(255,255,255,0.75);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.admin-table td { padding: 0.85rem 1rem; border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: middle; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: rgba(201,162,39,0.04); }
+
+.admin-farmer { display: flex; flex-direction: column; }
+.admin-farmer strong { color: var(--earth-deep, #1a1a0e); }
+.admin-farmer span { font-size: 0.78rem; color: var(--text-muted, #5a4a3a); }
+
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.status-badge--active { background: #e6f4ea; color: #1e7e34; }
+.status-badge--removed { background: #fde8e0; color: #c1440e; }
+.status-badge--pending { background: #fff3cd; color: #856404; }
+
+.admin-actions { display: flex; gap: 0.4rem; }
+.admin-btn {
+  padding: 0.3rem 0.7rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.admin-btn:hover { opacity: 0.8; }
+.admin-btn--approve { background: #e6f4ea; color: #1e7e34; }
+.admin-btn--remove { background: #fde8e0; color: #c1440e; }
+
+.admin-loading, .admin-empty {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted, #5a4a3a);
+  background: white;
+  border-radius: 0 8px 8px 8px;
+}
+
+.admin-refresh { margin-top: 1.5rem; display: flex; justify-content: flex-end; }
+
+@media (max-width: 768px) {
+  .admin-stats { grid-template-columns: 1fr; }
+  .admin-table { font-size: 0.78rem; }
+  .admin-table th, .admin-table td { padding: 0.6rem 0.75rem; }
+}
+
+/* Login screen */
+.admin-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--earth-deep, #1a1a0e);
+  position: relative;
+  overflow: hidden;
+}
+.admin-login-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/coat-of-arms.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 520px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.admin-login-card {
+  width: 100%;
+  max-width: 380px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+.admin-login-body { padding: 2rem; }
+.admin-login-icon { text-align: center; margin-bottom: 0.75rem; }
+.admin-login-title { text-align: center; font-size: 1.4rem; font-weight: 800; color: var(--earth-deep, #1a1a0e); margin-bottom: 0.25rem; }
+.admin-login-sub { text-align: center; font-size: 0.82rem; color: var(--text-muted, #5a4a3a); margin-bottom: 1.5rem; }
+.admin-login-error { color: #c1440e; font-size: 0.82rem; margin-top: 0.5rem; text-align: center; }
+
+/* Logout button */
+.admin-logout-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.admin-logout-btn:hover { background: rgba(255,255,255,0.25); }
+.admin-header { position: relative; }
+
+/* Edit button */
+.admin-btn--edit { background: #e8f0fb; color: #1a3a6a; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 1rem;
+}
+.modal-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+}
+.modal-body { padding: 1.5rem; }
+.modal-title { font-size: 1.1rem; font-weight: 800; color: var(--earth-deep, #1a1a0e); margin-bottom: 1.25rem; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem; }
