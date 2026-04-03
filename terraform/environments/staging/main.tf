@@ -21,11 +21,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "agroconnect-terraform-state-prod"
-    key            = "staging/terraform.tfstate"
-    region         = "us-east-2"
-    encrypt        = true
-    dynamodb_table = "agroconnect-terraform-locks"
+    bucket       = "agroconnect-terraform-state-staging"
+    key          = "staging/terraform.tfstate"
+    region       = "us-east-2"
+    encrypt      = true
+    use_lockfile = true
   }
 }
 
