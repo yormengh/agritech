@@ -177,11 +177,8 @@ resource "helm_release" "argocd" {
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
   version          = "5.51.4"
-  wait             = true
-
-  values = [file("${path.module}/argocd-values.yaml")]
-
-  depends_on = [module.eks, helm_release.karpenter]
+  wait             = false
+  depends_on       = [module.eks, helm_release.karpenter]
 }
 
 # ── Prometheus Stack Helm Install ─────────────────────────────────

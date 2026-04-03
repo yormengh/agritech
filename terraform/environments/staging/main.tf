@@ -159,5 +159,6 @@ resource "helm_release" "argocd" {
   chart            = "argo-cd"
   version          = "5.51.4"
   timeout          = 600
+  wait             = false
   depends_on       = [module.eks]
 }
