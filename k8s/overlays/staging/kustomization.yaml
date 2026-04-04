@@ -3,20 +3,18 @@ kind: Kustomization
 
 namespace: agroconnect-staging
 
-bases:
+resources:
   - ../../base/frontend
   - ../../base/backend
-
-resources:
   - namespace.yaml
 
 images:
   - name: FRONTEND_IMAGE
     newName: 794038236323.dkr.ecr.us-east-2.amazonaws.com/agroconnect-prod/frontend
-    newTag: develop
+    newTag: sha-558abc4
   - name: BACKEND_IMAGE
     newName: 794038236323.dkr.ecr.us-east-2.amazonaws.com/agroconnect-prod/backend
-    newTag: develop
+    newTag: sha-558abc4
 
 patches:
   - patch: |-
@@ -36,10 +34,3 @@ patches:
 
 commonLabels:
   environment: staging
-
-configMapGenerator:
-  - name: backend-config
-    behavior: merge
-    literals:
-      - frontend-url=https://staging.agroconnect.gh
-      - node-env=staging

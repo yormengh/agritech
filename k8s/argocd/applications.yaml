@@ -38,6 +38,8 @@ spec:
   destinations:
     - namespace: agroconnect
       server: https://kubernetes.default.svc
+    - namespace: agroconnect-staging
+      server: https://kubernetes.default.svc
     - namespace: monitoring
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
@@ -107,7 +109,7 @@ spec:
   project: agroconnect
   source:
     repoURL: https://github.com/yormengh/agritech.git
-    targetRevision: develop
+    targetRevision: main
     path: k8s/overlays/staging
   destination:
     server: https://kubernetes.default.svc
