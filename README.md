@@ -315,3 +315,5 @@ Built with ❤️ for Ghanaian farmers — *Akuafoɔ Ayekoo!* 🇬🇭
 *"Yɛn ara yɛn asase ni" — This is our own land.*
 
 </div>
+
+
