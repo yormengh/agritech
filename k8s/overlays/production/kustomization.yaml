@@ -15,10 +15,10 @@ resources:
 images:
 - name: BACKEND_IMAGE
   newName: 794038236323.dkr.ecr.us-east-2.amazonaws.com/agroconnect-prod/backend
-  newTag: sha-556c858
+  newTag: sha-ac30956
 - name: FRONTEND_IMAGE
   newName: 794038236323.dkr.ecr.us-east-2.amazonaws.com/agroconnect-prod/frontend
-  newTag: sha-556c858
+  newTag: sha-ac30956
 
 patches:
 - path: patches/backend-replicas.yaml
