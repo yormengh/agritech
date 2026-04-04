@@ -35,9 +35,8 @@ export default function Home() {
     fetch(`${API_BASE}/produce`)
       .then(r => r.json())
       .then(data => {
-        const today = new Date().toDateString()
-        const filtered = data.filter(item => new Date(item.created_at).toDateString() === today)
-        setTodayListings(filtered.slice(0, 3))
+        // Show the 3 most recent listings
+        setTodayListings(data.slice(0, 3))
       })
       .catch(() => {})
   }, [])

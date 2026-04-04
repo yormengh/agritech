@@ -1,7 +1,0 @@
-# Trivy ignore file — accepted/deferred CVEs
-# Format: CVE-YYYY-NNNNN  # justification | expiry
-
-# Alpine base image — upstream fix pending, no exploit vector in our usage
-# CVE-2023-5363  # OpenSSL — not exploitable via our nginx config | 2024-06-01
-
-# Review and remove entries as upstream patches are released
