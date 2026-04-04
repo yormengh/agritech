@@ -60,6 +60,10 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: false
 
+      - name: Install frontend deps for Snyk
+        working-directory: frontend
+        run: npm ci
+
       - name: Snyk frontend scan
         uses: snyk/actions/node@master
         env:
@@ -67,6 +71,10 @@ jobs:
         with:
           args: --severity-threshold=high --file=frontend/package.json
         continue-on-error: true
+
+      - name: Install backend deps for Snyk
+        working-directory: backend
+        run: npm ci
 
       - name: Snyk backend scan
         uses: snyk/actions/node@master
